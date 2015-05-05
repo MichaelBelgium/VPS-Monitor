@@ -9,3 +9,7 @@ If you ever have a website on your VPS or dedicated server, you could use this r
 
 <h1>Dependencies</h1>
 Only one, you need the <a href="https://github.com/aterrien/jQuery-Knob">this knob library</a>.
+
+<h1>Compatibility</h1>
+This php page has been tested on:
+* Centos 7
