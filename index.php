@@ -1,9 +1,13 @@
 <?php
 
 	exec("free | tail -2 | head -1 | awk {'print $3\" \"$4\" \"$7'}",$mem);
+	exec("cat /proc/loadavg | awk {'print $1\" \"$4'}",$cpu);
+	exec(" cat /proc/cpuinfo | grep \"model name\"",$cpuinfo);
 	exec("df",$storage);
 	exec("/usr/bin/cut -d. -f1 /proc/uptime",$uptime);
 
+	$cpu = explode(" ", $cpu[0]);
+	$processes = explode("/", $cpu[1]);
 	$uptime = $uptime[0];
 	$mem = explode(" ", $mem[0]);
 	$storage = explode(" ", $storage[5]);
@@ -30,9 +34,9 @@
 			
 		</script>
 		<style type="text/css">
-			* { padding: 0; margin: 0; }
-			h2 {margin-bottom: 70px;}
+			h2 {font-size: 30px; margin-bottom: 70px; margin-top: 0;}
 			span { vertical-align: middle; }
+			label { font-size: 25px; }
 			section { display: inline-block;}
 			p { margin-top: 70px; }
 			div {padding: 10px;}
@@ -41,14 +45,18 @@
 
 	<body>
 		<div>
-			<section id="mem" data-fgColor="#66CC66" data-thickness=".26"><h2>RAM usage</h2><label></label></section>
-			<section id="hdd" data-fgColor="#66CC66" data-thickness=".26"><h2>Disk usage</h2><label></label></section>
+			<section id="mem" data-thickness=".26"><h2>RAM usage</h2><label></label></section>
+			<section id="hdd" data-thickness=".26"><h2>Disk usage</h2><label></label></section>
+			<section id="cpu" data-fgColor="#66CC66" data-thickness=".26"><h2>CPU usage</h2><label></label></section>
+
 			<?php 
 				echo "<p>";
-				echo "RAM usage: ", number_format($mem[0],0,","," ")," kb out of ", number_format($mem[2],0,","," "), " kb used. Free: ",number_format($mem[1],0,","," ")," kb<br>"; 
-				echo "HDD usage: ", number_format($storage[1],0,","," ")," kb out of ", number_format($storage[0],0,","," "), " kb used. Free: ",number_format($storage[2],0,","," "), " kb<br>";
-				echo "Uptime:", convertSeconds($uptime);
-				echo "</p>";
+				echo "<b>RAM usage</b>:", number_format($mem[0],0,","," ")," kb out of ", number_format($mem[2],0,","," "), " kb used. Free: ",number_format($mem[1],0,","," ")," kb<br>"; 
+				echo "<b>HDD usage</b>: ", number_format($storage[1],0,","," ")," kb out of ", number_format($storage[0],0,","," "), " kb used. Free: ",number_format($storage[2],0,","," "), " kb<br>";
+				echo "<b>Uptime</b>:", convertSeconds($uptime), "<br>";
+				echo "<b>Processes</b>:", $processes[0], " running, ", $processes[1], " sleeping<br>";
+				echo "<b>CPU Info</b>:<ul>"; for ($i=0; $i < count($cpuinfo); $i++) echo "<li>", substr($cpuinfo[$i], 12), "</li>";
+				echo "</ul></p>";
 			?>
 		</div>
 		<script type="text/javascript">
@@ -61,13 +69,21 @@
 				'readOnly': true,
 				'max': <?php echo $storage[0]; ?>
 			});
-
+			
+			$("#cpu").knob({
+				'readOnly': true,
+				'max': 100
+			});
+			
 			$("#mem").val(<?php echo $mem[0]; ?>).trigger('change');
 			$("#mem label").text(round(<?php echo $mem[0]; ?>/<?php echo $mem[2]; ?>*100) + "%");
 
 			$("#hdd").val( <?php echo $storage[1]; ?>).trigger('change');
 			$("#hdd label").text(round( <?php echo $storage[1]; ?>/<?php echo $storage[0]; ?>*100) + "%");
 
+			var cpuusage = round((<?php echo $cpu[0]; ?>*100) / <?php echo count($cpuinfo); ?>);
+			$("#cpu").val(cpuusage).trigger('change');
+			$("#cpu label").text(cpuusage+"%");
 			function round(num) { return num.toFixed(3); }
 		</script>
 	</body>
