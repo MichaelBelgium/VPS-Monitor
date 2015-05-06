@@ -6,6 +6,8 @@ If you ever have a website on your VPS or dedicated server, you could use this r
 * HDD usage
 * Uptime
 * RAM usage
+* CPU info
+* Processes
 
 <h1>Dependencies</h1>
 Only one, you need the <a href="https://github.com/aterrien/jQuery-Knob">this knob library</a>.
