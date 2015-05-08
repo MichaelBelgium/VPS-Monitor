@@ -1,7 +1,8 @@
 <?php
-
+	define("DISPLAY", "knob");
+	
 	exec("free | tail -2 | head -1 | awk {'print $3\" \"$4\" \"$7'}",$mem);
-	exec("cat /proc/loadavg | awk {'print $1\" \"$4'}",$cpu);
+	exec("cat /proc/loadavg | awk {'print $1\" \"$4'}",$cpu); //or "ps -aux | awk {'print $3'}"
 	exec(" cat /proc/cpuinfo | grep \"model name\"",$cpuinfo);
 	exec("df",$storage);
 	exec("/usr/bin/cut -d. -f1 /proc/uptime",$uptime);
@@ -38,19 +39,25 @@
 			span { vertical-align: middle; }
 			label { font-size: 25px; }
 			section { display: inline-block;}
-			p { margin-top: 70px; }
 			div {padding: 10px;}
+			progress {width: 1000px; display: block; margin-bottom: 5px;}
 		</style>
 	</head>
 
 	<body>
 		<div>
+			<?php if(DISPLAY == "knob"): ?>
 			<section id="mem" data-thickness=".26"><h2>RAM usage</h2><label></label></section>
 			<section id="hdd" data-thickness=".26"><h2>Disk usage</h2><label></label></section>
 			<section id="cpu" data-fgColor="#66CC66" data-thickness=".26"><h2>CPU usage</h2><label></label></section>
-
-			<?php 
-				echo "<p>";
+			<p style="margin-top: 50px;">
+			<?php elseif(DISPLAY == "progress"): ?>
+				<progress value="<?php echo $mem[0]; ?>" max="<?php echo $mem[2]; ?>"></progress>
+				<progress value="<?php echo $storage[1]; ?>" max="<?php echo $storage[0]; ?>"></progress>
+				<progress value="<?php echo $cpu[0]*100; ?>" max="100"></progress>
+				<p>
+			<?php
+			endif; 
 				echo "<b>RAM usage</b>:", number_format($mem[0],0,","," ")," kb out of ", number_format($mem[2],0,","," "), " kb used. Free: ",number_format($mem[1],0,","," ")," kb<br>"; 
 				echo "<b>HDD usage</b>: ", number_format($storage[1],0,","," ")," kb out of ", number_format($storage[0],0,","," "), " kb used. Free: ",number_format($storage[2],0,","," "), " kb<br>";
 				echo "<b>Uptime</b>:", convertSeconds($uptime), "<br>";
@@ -81,10 +88,18 @@
 			$("#hdd").val( <?php echo $storage[1]; ?>).trigger('change');
 			$("#hdd label").text(round( <?php echo $storage[1]; ?>/<?php echo $storage[0]; ?>*100) + "%");
 
-			var cpuusage = round((<?php echo $cpu[0]; ?>*100) / <?php echo count($cpuinfo); ?>);
+			var cpuusage = round((<?php echo $cpu[0]; ?>*100) / <?php echo count($cpuinfo); ?>,1);
 			$("#cpu").val(cpuusage).trigger('change');
 			$("#cpu label").text(cpuusage+"%");
-			function round(num) { return num.toFixed(3); }
+			function round(num,fix) 
+			{ 
+				fix = (typeof fix === 'undefined') ? 3 : fix; 
+				return num.toFixed(fix); 
+			}
+
+			$(document).ready(function() {
+				setTimeout(function(){ location.reload(); }, 1000);
+			});
 		</script>
 	</body>
 </html>
