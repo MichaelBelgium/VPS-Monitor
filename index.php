@@ -1,10 +1,12 @@
 <?php
-	define("DISPLAY", "knob");
+	define("DISPLAY", "knob"); //knob or progress
+	define("REFRESH_TIME", 3); //in seconds
+	define("DEBIAN", false); //is this file located on debian or not ?
 	
 	exec(" free | grep \"Mem:\" | awk {'print $2\" \"$3\" \"$4'}",$mem);
-	exec("cat /proc/loadavg | awk {'print $1\" \"$4'}",$cpu); //or "ps -aux | awk {'print $3'}"
+	exec("cat /proc/loadavg | awk {'print $1\" \"$4'}",$cpu);
 	exec("cat /proc/cpuinfo | grep \"model name\"",$cpuinfo);
-	exec("df | grep /dev/simfs | awk {'print $2\" \"$3\" \"$4'}df",$storage);
+	exec("df | grep ".((DEBIAN) ? "rootfs" : "/dev/simfs")." | awk {'print $2\" \"$3\" \"$4'}",$storage);
 	exec("/usr/bin/cut -d. -f1 /proc/uptime",$uptime);
 
 	$cpu = explode(" ", $cpu[0]);
@@ -45,6 +47,7 @@
 
 	<body>
 		<div>
+			<p><b>Note:</b>This page refreshes every <?php echo REFRESH_TIME; ?> second(s).</p>
 			<?php if(DISPLAY == "knob"): ?>
 			<section id="mem" data-thickness=".26"><h2>RAM usage</h2><label></label></section>
 			<section id="hdd" data-thickness=".26"><h2>Disk usage</h2><label></label></section>
@@ -66,20 +69,9 @@
 			?>
 		</div>
 		<script type="text/javascript">
-			$("#mem").knob({
-				'readOnly': true,
-				'max': <?php echo $mem[0]; ?>
-			});
-
-			$("#hdd").knob({
-				'readOnly': true,
-				'max': <?php echo $storage[0]; ?>
-			});
-			
-			$("#cpu").knob({
-				'readOnly': true,
-				'max': 100
-			});
+			$("#mem").knob({'readOnly': true, 'max': <?php echo $mem[0]; ?>	});
+			$("#hdd").knob({'readOnly': true, 'max': <?php echo $storage[0]; ?>	});
+			$("#cpu").knob({'readOnly': true, 'max': 100 });
 			
 			$("#mem").val(<?php echo $mem[1]; ?>).trigger('change');
 			$("#mem label").text(round(<?php echo $mem[1]; ?>/<?php echo $mem[0]; ?>*100) + "%");
@@ -97,7 +89,7 @@
 			}
 
 			$(document).ready(function() {
-				setTimeout(function(){ location.reload(); }, 1000);
+				setTimeout(function(){ location.reload(); }, <?php echo REFRESH_TIME*1000; ?>);
 			});
 		</script>
 	</body>

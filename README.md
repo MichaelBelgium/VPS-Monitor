@@ -15,10 +15,18 @@ Only one, you need the <a href="https://github.com/aterrien/jQuery-Knob">this kn
 <h1>Compatibility</h1>
 This php page has been tested on:
 * Centos (5 and 7)
+* Debian
+
+For debian change the "DEBIAN" define to true:
+```PHP
+define("DEBIAN", true); 
+```
 
 <h1>Config</h1>
 ```PHP
 define("DISPLAY", "knob"); //knob or progress
+define("REFRESH_TIME", 3); //every x seconds the page get refreshed
+define("DEBIAN", false); //is this file located on debian or not ?
 ```
 
 <h1>Example</h1>
