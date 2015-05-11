@@ -1,18 +1,17 @@
 <?php
 	define("DISPLAY", "knob");
 	
-	exec("free | tail -2 | head -1 | awk {'print $3\" \"$4\" \"$7'}",$mem);
+	exec(" free | grep \"Mem:\" | awk {'print $2\" \"$3\" \"$4'}",$mem);
 	exec("cat /proc/loadavg | awk {'print $1\" \"$4'}",$cpu); //or "ps -aux | awk {'print $3'}"
-	exec(" cat /proc/cpuinfo | grep \"model name\"",$cpuinfo);
-	exec("df",$storage);
+	exec("cat /proc/cpuinfo | grep \"model name\"",$cpuinfo);
+	exec("df | grep /dev/simfs | awk {'print $2\" \"$3\" \"$4'}df",$storage);
 	exec("/usr/bin/cut -d. -f1 /proc/uptime",$uptime);
 
 	$cpu = explode(" ", $cpu[0]);
 	$processes = explode("/", $cpu[1]);
 	$uptime = $uptime[0];
 	$mem = explode(" ", $mem[0]);
-	$storage = explode(" ", $storage[5]);
-	$storage = array($storage[6], $storage[7], $storage[9]);
+	$storage = explode(" ", $storage[0]);
 
 	function convertSeconds($ss) 
 	{
@@ -52,13 +51,13 @@
 			<section id="cpu" data-fgColor="#66CC66" data-thickness=".26"><h2>CPU usage</h2><label></label></section>
 			<p style="margin-top: 50px;">
 			<?php elseif(DISPLAY == "progress"): ?>
-				<progress value="<?php echo $mem[0]; ?>" max="<?php echo $mem[2]; ?>"></progress>
+				<progress value="<?php echo $mem[1]; ?>" max="<?php echo $mem[0]; ?>"></progress>
 				<progress value="<?php echo $storage[1]; ?>" max="<?php echo $storage[0]; ?>"></progress>
 				<progress value="<?php echo $cpu[0]*100; ?>" max="100"></progress>
 				<p>
 			<?php
 			endif; 
-				echo "<b>RAM usage</b>:", number_format($mem[0],0,","," ")," kb out of ", number_format($mem[2],0,","," "), " kb used. Free: ",number_format($mem[1],0,","," ")," kb<br>"; 
+				echo "<b>RAM usage</b>:", number_format($mem[1],0,","," ")," kb out of ", number_format($mem[0],0,","," "), " kb used. Free: ",number_format($mem[2],0,","," ")," kb<br>"; 
 				echo "<b>HDD usage</b>: ", number_format($storage[1],0,","," ")," kb out of ", number_format($storage[0],0,","," "), " kb used. Free: ",number_format($storage[2],0,","," "), " kb<br>";
 				echo "<b>Uptime</b>:", convertSeconds($uptime), "<br>";
 				echo "<b>Processes</b>:", $processes[0], " running, ", $processes[1], " sleeping<br>";
@@ -69,7 +68,7 @@
 		<script type="text/javascript">
 			$("#mem").knob({
 				'readOnly': true,
-				'max': <?php echo $mem[2]; ?>
+				'max': <?php echo $mem[0]; ?>
 			});
 
 			$("#hdd").knob({
@@ -82,8 +81,8 @@
 				'max': 100
 			});
 			
-			$("#mem").val(<?php echo $mem[0]; ?>).trigger('change');
-			$("#mem label").text(round(<?php echo $mem[0]; ?>/<?php echo $mem[2]; ?>*100) + "%");
+			$("#mem").val(<?php echo $mem[1]; ?>).trigger('change');
+			$("#mem label").text(round(<?php echo $mem[1]; ?>/<?php echo $mem[0]; ?>*100) + "%");
 
 			$("#hdd").val( <?php echo $storage[1]; ?>).trigger('change');
 			$("#hdd label").text(round( <?php echo $storage[1]; ?>/<?php echo $storage[0]; ?>*100) + "%");
