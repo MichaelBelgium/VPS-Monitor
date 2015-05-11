@@ -20,3 +20,6 @@ This php page has been tested on:
 ```PHP
 define("DISPLAY", "knob"); //knob or progress
 ```
+
+<h1>Example</h1>
+<img src="http://puu.sh/hJAbF.png"></img>
