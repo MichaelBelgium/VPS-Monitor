@@ -14,7 +14,7 @@ Only one, you need the <a href="https://github.com/aterrien/jQuery-Knob">this kn
 
 <h1>Compatibility</h1>
 This php page has been tested on:
-* Centos 7
+* Centos (5 and 7)
 
 <h1>Config</h1>
 ```PHP
