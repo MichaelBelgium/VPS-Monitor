@@ -8,6 +8,7 @@ If you ever have a website on your VPS or dedicated server, you could use this r
 * RAM usage
 * CPU info
 * Processes
+* Network info
 
 <h1>Dependencies</h1>
 Only one, you need the <a href="https://github.com/aterrien/jQuery-Knob">this knob library</a>.
@@ -30,4 +31,4 @@ define("DEBIAN", false); //is this file located on debian or not ?
 ```
 
 <h1>Example</h1>
-<img src="http://puu.sh/hJAbF.png"></img>
+<img src="http://puu.sh/hObiN.png"></img>

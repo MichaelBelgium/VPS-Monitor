@@ -8,12 +8,14 @@
 	exec("cat /proc/cpuinfo | grep \"model name\"",$cpuinfo);
 	exec("df | grep ".((DEBIAN) ? "rootfs" : "/dev/simfs")." | awk {'print $2\" \"$3\" \"$4'}",$storage);
 	exec("/usr/bin/cut -d. -f1 /proc/uptime",$uptime);
+	exec("cat /proc/net/dev | grep 'venet0' | awk {'print $1\" \"$2\" \"$9\" \"$10'}",$network);
 
 	$cpu = explode(" ", $cpu[0]);
 	$processes = explode("/", $cpu[1]);
 	$uptime = $uptime[0];
 	$mem = explode(" ", $mem[0]);
 	$storage = explode(" ", $storage[0]);
+	$network = explode(" ", $network[0]);
 
 	function convertSeconds($ss) 
 	{
@@ -64,7 +66,8 @@
 				echo "<b>HDD usage</b>: ", number_format($storage[1],0,","," ")," kb out of ", number_format($storage[0],0,","," "), " kb used. Free: ",number_format($storage[2],0,","," "), " kb<br>";
 				echo "<b>Uptime</b>:", convertSeconds($uptime), "<br>";
 				echo "<b>Processes</b>:", $processes[0], " running, ", $processes[1], " sleeping<br>";
-				echo "<b>CPU Info</b>:<ul>"; for ($i=0; $i < count($cpuinfo); $i++) echo "<li>", substr($cpuinfo[$i], 12), "</li>";
+				echo "<b>CPU Info</b>:<ul>"; for ($i=0; $i < count($cpuinfo); $i++) echo "<li>", substr($cpuinfo[$i], 12), "</li>"; echo "</ul>";
+				echo "<b>Network info</b>:<ul><li>Received: ", number_format(substr($network[0], 7),0,","," "), " bytes (", number_format($network[1],0,","," ")," packets)</li><li>Sent: ", number_format($network[2],0,","," ")," bytes (", number_format($network[3],0,","," "), " packets)</li></ul>";
 				echo "</ul></p>";
 			?>
 		</div>
