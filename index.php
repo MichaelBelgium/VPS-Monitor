@@ -1,5 +1,5 @@
 <?php
-	define("DISPLAY", "knob"); //knob or progress
+	define("DISPLAY", "knob"); //knob or meter
 	define("REFRESH_TIME", 3); //in seconds
 	define("DEBIAN", false); //is this file located on debian or not ?
 	
@@ -9,14 +9,13 @@
 	exec("df | grep ".((DEBIAN) ? "rootfs" : "/dev/simfs")." | awk {'print $2\" \"$3\" \"$4'}",$storage);
 	exec("/usr/bin/cut -d. -f1 /proc/uptime",$uptime);
 	exec("cat /proc/net/dev | grep ". ((DEBIAN) ? "eth0" : "venet0") ." | ". ((DEBIAN) ? "awk {'print $2\" \"$3\" \"$10\" \"$11'}": "awk {'print $1\" \"$2\" \"$9\" \"$10'}"),$network);
-
+	
 	$cpu = explode(" ", $cpu[0]);
 	$processes = explode("/", $cpu[1]);
 	$uptime = $uptime[0];
 	$mem = explode(" ", $mem[0]);
 	$storage = explode(" ", $storage[0]);
 	$network = explode(" ", $network[0]);
-
 
 	function convertSeconds($ss) 
 	{
@@ -35,16 +34,13 @@
 		<title>VPS Usage</title>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script src="knob.js"></script>
-		<script type="text/javascript">
-			
-		</script>
 		<style type="text/css">
 			h2 {font-size: 30px; margin-bottom: 70px; margin-top: 0;}
 			span { vertical-align: middle; }
 			label { font-size: 25px; }
 			section { display: inline-block;}
 			div {padding: 10px;}
-			progress {width: 1000px; display: block; margin-bottom: 5px;}
+			meter { width: 100%; height: 30px;}
 		</style>
 	</head>
 
@@ -56,10 +52,10 @@
 			<section id="hdd" data-thickness=".26"><h2>Disk usage</h2><label></label></section>
 			<section id="cpu" data-fgColor="#66CC66" data-thickness=".26"><h2>CPU usage</h2><label></label></section>
 			<p style="margin-top: 50px;">
-			<?php elseif(DISPLAY == "progress"): ?>
-				<progress value="<?php echo $mem[1]; ?>" max="<?php echo $mem[0]; ?>"></progress>
-				<progress value="<?php echo $storage[1]; ?>" max="<?php echo $storage[0]; ?>"></progress>
-				<progress value="<?php echo $cpu[0]*100; ?>" max="100"></progress>
+			<?php elseif(DISPLAY == "meter"): ?>
+				<label for="mem"></label><meter min="0" max="<?php echo $mem[0]; ?>" low="25" high="75" value="<?php echo $mem[1]; ?>"></meter>
+				<label for="hdd"></label><meter min="0" max="<?php echo $storage[0]; ?>" low="25" high="75" value="<?php echo $storage[1]; ?>"></meter>
+				<label for="cpu"></label><meter min="0" max="100" low="25" high="75" value="<?php echo $cpu[0]; ?>"></meter>
 				<p>
 			<?php
 			endif; 
@@ -79,13 +75,17 @@
 			
 			$("#mem").val(<?php echo $mem[1]; ?>).trigger('change');
 			$("#mem label").text(round(<?php echo $mem[1]; ?>/<?php echo $mem[0]; ?>*100) + "%");
+			$("label[for=mem]").text(round(<?php echo $mem[1]; ?>/<?php echo $mem[0]; ?>*100) + "%");
 
 			$("#hdd").val( <?php echo $storage[1]; ?>).trigger('change');
 			$("#hdd label").text(round( <?php echo $storage[1]; ?>/<?php echo $storage[0]; ?>*100) + "%");
+			$("label[for=hdd]").text(round( <?php echo $storage[1]; ?>/<?php echo $storage[0]; ?>*100) + "%");
 
 			var cpuusage = round((<?php echo $cpu[0]; ?>*100) / <?php echo count($cpuinfo); ?>,1);
 			$("#cpu").val(cpuusage).trigger('change');
 			$("#cpu label").text(cpuusage+"%");
+			$("label[for=cpu]").text(cpuusage+"%");
+
 			function round(num,fix) 
 			{ 
 				fix = (typeof fix === 'undefined') ? 3 : fix; 
