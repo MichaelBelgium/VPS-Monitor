@@ -3,7 +3,10 @@
 	define("REFRESH_TIME", 3); //in seconds
 	define("DEBIAN", false); //is this file located on debian or not ?
 	
-	exec(" free | grep \"Mem:\" | awk {'print $2\" \"$3\" \"$4'}",$mem);
+	if(DEBIAN)
+		exec(" free | grep \"buffers/cache\" | awk {'print $3+$4\" \"$3\" \"$4'}",$mem);
+	else
+		exec("free | grep \"Mem:\" | awk {'print $2\" \"$3\" \"$4'}",$mem);
 	exec("cat /proc/loadavg | awk {'print $1\" \"$4'}",$cpu);
 	exec("cat /proc/cpuinfo | grep \"model name\"",$cpuinfo);
 	exec("df | grep ".((DEBIAN) ? "rootfs" : "/dev/simfs")." | awk {'print $2\" \"$3\" \"$4'}",$storage);
