@@ -32,4 +32,4 @@ define("DEBIAN", false); //is this file located on debian or not ?
 ```
 
 <h1>Example</h1>
-<img src="http://puu.sh/hObiN.png"></img>
+<a href="http://exp-gaming.net/vps/">Click</a>
