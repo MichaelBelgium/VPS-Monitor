@@ -11,24 +11,19 @@ If you ever have a website on your VPS or dedicated server, you could use this r
 * Network info
 
 <h1>Dependencies</h1>
-If you use knobs then you need <a href="https://github.com/aterrien/jQuery-Knob">this knob library</a>.
+It uses <a href="https://github.com/aterrien/jQuery-Knob">this knob library</a> which is linked towards it already in the file(s).
 
 <h1>Compatibility</h1>
 This php page has been tested on:
-* Google Chrome - The ```<meter>```tags are not supported in Internet Explorer !
-* Centos (5 and 7)
-* Debian
+* Google Chrome
+* Centos 6.8 and 7.2 
 
-For debian change the "DEBIAN" define to true:
-```PHP
-define("DEBIAN", true); 
-```
+There are settings which u can change if you are using anything else than Centos 6.8, for other dists you might wanna dig in even further.
+
 
 <h1>Config</h1>
 ```PHP
-define("DISPLAY", "knob"); //knob or meter
 define("REFRESH_TIME", 3); //every x seconds the page get refreshed
-define("DEBIAN", false); //is this file located on debian or not ?
 ```
 
 <h1>Example</h1>
