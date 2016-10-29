@@ -12,6 +12,17 @@
 			article h2 	{ font-size: 30px;	margin: 0;	}
 			article span { display: inline-block;  margin-top: 75px; font-size: 20px;}
 			#content { margin-top: 40px; }
+			div.info_box 
+			{ 
+				font-family: 'Didact Gothic', sans-serif;
+				color:#fff;
+				background-color: #66CC66;
+				border-radius:5px;
+				padding: 10px;
+				display: inline-block;
+				width: auto;
+    			margin: 10px;
+			}
 		</style>
 	</head>
 
@@ -34,7 +45,7 @@
 				<span></span>
 			</article>
 
-			<p id="content"></p>
+			<section id="content"></section>
 		</div>
 		<script type="text/javascript">
 		$(document).ready(function() 
@@ -67,16 +78,26 @@
 			$("#cpu span").text($("#cpu").val() + "%");
 
 			$("#content").empty();
-			$("#content").html("<b>RAM usage:</b> "+data.mem[1]+" kb out of "+data.mem[0]+" kb used. Free: " + data.mem[2] + "<br />" +
-				"<b>HDD usage:</b> "+data.storage[1]+" out of "+data.storage[0]+" kb used. Free: "+data.storage[2] + "<br />" + 
+			$("#content").html("<b>RAM usage:</b> "+formatNumber(data.mem[1])+" kb out of "+formatNumber(data.mem[0])+" kb used. Free: " + formatNumber(data.mem[2]) + " kb<br />" +
+				"<b>HDD usage:</b> " + formatNumber(data.storage[1]) + " kb out of " + formatNumber(data.storage[0]) + " kb used. Free: " + formatNumber(data.storage[2]) + "kb <br />" + 
 				"<b>Uptime:</b> "+ getTime(data.uptime) + "<br />" +
 				"<b>Processes:</b> " + data.cpu_processes[0] + " running, " + data.cpu_processes[1] + " idle <br/>" +
-				"<b>Network stats</b>: <ul><li>Recieved: " + data.network[0] + " bytes (" + data.network[1] + " packets)</li><li>Sent: " + data.network[2] + " bytes (" + data.network[3] + " packets)</li></ul><b>CPU info:</b><p>");
+				"<b>Network stats</b>: <ul><li>Recieved: " + formatNumber(data.network[0]) + " bytes (" + formatNumber(data.network[1]) + " packets)</li><li>Sent: " + formatNumber(data.network[2]) + " bytes (" + formatNumber(data.network[3]) + " packets)</li></ul><b>CPU info:</b><br />");
 
 			for (var i = 0; i < data.cpu_info.length; i++) 
-				$("#content").append(data.cpu_info[i] + "<br />");
+			{
+				if(i % 3 === 0)
+				{
+					var div = $("<div>", {"class": "info_box"});
+					$("#content").append(div);
+					div.append(data.cpu_info[i] + "<br />" + data.cpu_info[i + 1] + "<br />" + data.cpu_info[i + 2]);
+				}
+			}
+		}
 
-			$("#content").append("</p>");
+		function formatNumber(number)
+		{
+			return number.toLocaleString("nl").replace(/\./g, " ");
 		}
 
 		function getTime(seconds) 
