@@ -65,32 +65,35 @@
 
 		function success(data, textStatus, jqXHR)
 		{
-			$("#mem").trigger("configure",{"min":0, "max": data.mem[0] });
-			$("#hdd").trigger("configure",{"min":0, "max": data.storage[0] });
+			console.log(data);
 
-			$("#mem").val(data.mem[1]).trigger("change");
-			$("#mem span").text(((data.mem[1] / data.mem[0]) * 100).toFixed(2) + "%");
+			$("#mem").trigger("configure",{"min": 0, "max": data.memory[0] });
+			$("#mem").val(data.memory[1]).trigger("change");
+			$("#mem span").text(((data.memory[1] / data.memory[0]) * 100).toFixed(2) + "%");
+			
+			$("#hdd").trigger("configure",{"min": 0, "max": data.storage[0] });
+			$("#hdd").val(data.storage["used"]).trigger("change");
+			$("#hdd span").text(((data.storage["used"] / data.storage["total"]) * 100).toFixed(2) + "%" );
 
-			$("#hdd").val(data.storage[1]).trigger("change");
-			$("#hdd span").text( ((data.storage[1] / data.storage[0]) * 100).toFixed(2) + "%" );
-
-			$("#cpu").val(data.cpu_load * 100.0).trigger("change");
+			$("#cpu").val(data.CPUDetail[0] * 100.0).trigger("change");
 			$("#cpu span").text($("#cpu").val() + "%");
 
 			$("#content").empty();
-			$("#content").html("<b>RAM usage:</b> "+formatNumber(data.mem[1])+" kb out of "+formatNumber(data.mem[0])+" kb used. Free: " + formatNumber(data.mem[2]) + " kb<br />" +
-				"<b>HDD usage:</b> " + formatNumber(data.storage[1]) + " kb out of " + formatNumber(data.storage[0]) + " kb used. Free: " + formatNumber(data.storage[2]) + "kb <br />" + 
+
+
+			$("#content").html("<b>RAM usage:</b> "+formatNumber(data.memory[1])+" kb out of "+formatNumber(data.memory[0])+" kb used. Free: " + formatNumber(data.memory[2]) + " kb<br />" +
+				"<b>HDD usage:</b> " + formatNumber(data.storage["used"]) + " kb out of " + formatNumber(data.storage["total"]) + " kb used. Free: " + formatNumber(data.storage["free"]) + " kb <br />" + 
 				"<b>Uptime:</b> "+ getTime(data.uptime) + "<br />" +
-				"<b>Processes:</b> " + data.cpu_processes[0] + " running, " + data.cpu_processes[1] + " idle <br/>" +
+				"<b>Processes running/idle:</b> " + data.CPUDetail[1] + "<br/>" +
 				"<b>Network stats</b>: <ul><li>Recieved: " + formatNumber(data.network[0]) + " bytes (" + formatNumber(data.network[1]) + " packets)</li><li>Sent: " + formatNumber(data.network[2]) + " bytes (" + formatNumber(data.network[3]) + " packets)</li></ul><b>CPU info:</b><br />");
 
-			for (var i = 0; i < data.cpu_info.length; i++) 
+			for (var i = 0; i < data.CPU.length; i++) 
 			{
 				if(i % 3 === 0)
 				{
 					var div = $("<div>", {"class": "info_box"});
 					$("#content").append(div);
-					div.append(data.cpu_info[i] + "<br />" + data.cpu_info[i + 1] + "<br />" + data.cpu_info[i + 2]);
+					div.append(data.CPU[i][1] + "<br />" + data.CPU[i + 1][0] + ": " + data.CPU[i + 1][1] + "<br />" + data.CPU[i + 2][0] + ": " + data.CPU[i + 2][1]);
 				}
 			}
 		}

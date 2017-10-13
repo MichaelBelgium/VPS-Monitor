@@ -14,11 +14,8 @@ If you ever have a website on your VPS or dedicated server, you could use this r
 It uses <a href="https://github.com/aterrien/jQuery-Knob">this knob library</a> which is linked towards it already in the file(s).
 
 <h1>Compatibility</h1>
-This php page has been tested on:
-* Google Chrome
-* Centos 6.8 and 7.2 
-
-There are settings which u can change if you are using anything else than Centos 6.8, for other dists you might wanna dig in even further.
+This php page has been tested on `CentOS Linux release 7.4.1708 (Core)`
+There's a chance you might need to edit the `getData.php` for your system.
 
 
 <h1>Config</h1>
