@@ -65,13 +65,11 @@
 
 		function success(data, textStatus, jqXHR)
 		{
-			console.log(data);
-
 			$("#mem").trigger("configure",{"min": 0, "max": data.memory[0] });
 			$("#mem").val(data.memory[1]).trigger("change");
 			$("#mem span").text(((data.memory[1] / data.memory[0]) * 100).toFixed(2) + "%");
-			
-			$("#hdd").trigger("configure",{"min": 0, "max": data.storage[0] });
+
+			$("#hdd").trigger("configure",{"min": 0, "max": data.storage["total"] });
 			$("#hdd").val(data.storage["used"]).trigger("change");
 			$("#hdd span").text(((data.storage["used"] / data.storage["total"]) * 100).toFixed(2) + "%" );
 
@@ -80,9 +78,8 @@
 
 			$("#content").empty();
 
-
 			$("#content").html("<b>RAM usage:</b> "+formatNumber(data.memory[1])+" kb out of "+formatNumber(data.memory[0])+" kb used. Free: " + formatNumber(data.memory[2]) + " kb<br />" +
-				"<b>HDD usage:</b> " + formatNumber(data.storage["used"]) + " kb out of " + formatNumber(data.storage["total"]) + " kb used. Free: " + formatNumber(data.storage["free"]) + " kb <br />" + 
+				"<b>HDD usage:</b> " + formatNumber(data.storage["used"]) + " bytes out of " + formatNumber(data.storage["total"]) + " bytes used. Free: " + formatNumber(data.storage["free"]) + " bytes <br />" + 
 				"<b>Uptime:</b> "+ getTime(data.uptime) + "<br />" +
 				"<b>Processes running/idle:</b> " + data.CPUDetail[1] + "<br/>" +
 				"<b>Network stats</b>: <ul><li>Recieved: " + formatNumber(data.network[0]) + " bytes (" + formatNumber(data.network[1]) + " packets)</li><li>Sent: " + formatNumber(data.network[2]) + " bytes (" + formatNumber(data.network[3]) + " packets)</li></ul><b>CPU info:</b><br />");
