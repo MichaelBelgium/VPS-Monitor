@@ -28,10 +28,7 @@ $(document).ready(function()
 			selected: 0
 		},
 
-		tooltip: {
-	        pointFormat: '{series.name}: <b>{point.y}%</b>'
-	    },
-
+		tooltip: { pointFormat: '{series.name}: <b>{point.y}%</b>' },
 		chart: { renderTo: 'mainchart' },
 		title: { text: 'Hardware usage' },
 		xAxis: { title: "Time", type: "datetime", },
@@ -67,38 +64,35 @@ function getDummyData()
 
 function refresh()
 {
-	$.getJSON("getData.php", "", success);
-}
+	$.getJSON("getData.php", null, function(data, textStatus, jqXHR) {
+		var time = (new Date()).getTime();
 
-function success(data, textStatus, jqXHR)
-{
-	var time = (new Date()).getTime();
+		var currentram = ((data.memory[1] / data.memory[0]) * 100).toFixed(2);
+		var currenthdd = ((data.storage["used"] / data.storage["total"]) * 100).toFixed(2);
+		var currentcpu = (data.CPUDetail[0] * 100).toFixed(2);
 
-	var currentram = ((data.memory[1] / data.memory[0]) * 100).toFixed(2);
-	var currenthdd = ((data.storage["used"] / data.storage["total"]) * 100).toFixed(2);
-	var currentcpu = (data.CPUDetail[0] * 100).toFixed(2);
-
-	mainchart.series[0].addPoint([time, parseFloat(currentram)], false, true);
+		mainchart.series[0].addPoint([time, parseFloat(currentram)], false, true);
 		mainchart.series[1].addPoint([time, parseFloat(currenthdd)], false, true);
-	mainchart.series[2].addPoint([time, parseFloat(currentcpu)], true, true);
+		mainchart.series[2].addPoint([time, parseFloat(currentcpu)], true, true);
 
-	$("#content").empty();
+		$("#content").empty();
 
-	$("#content").html("<b>RAM usage:</b> "+formatNumber(data.memory[1])+" kb out of "+formatNumber(data.memory[0])+" kb used. Free: " + formatNumber(data.memory[2]) + " kb<br />" +
-		"<b>HDD usage:</b> " + formatNumber(data.storage["used"]) + " bytes out of " + formatNumber(data.storage["total"]) + " bytes used. Free: " + formatNumber(data.storage["free"]) + " bytes <br />" + 
-		"<b>Uptime:</b> "+ getTime(data.uptime) + "<br />" +
-		"<b>Processes running/idle:</b> " + data.CPUDetail[1] + "<br/>" +
-		"<b>Network stats</b>: <ul><li>Recieved: " + formatNumber(data.network[0]) + " bytes (" + formatNumber(data.network[1]) + " packets)</li><li>Sent: " + formatNumber(data.network[2]) + " bytes (" + formatNumber(data.network[3]) + " packets)</li></ul><b>CPU info:</b><br />");
+		$("#content").html("<b>RAM usage:</b> "+formatNumber(data.memory[1])+" kb out of "+formatNumber(data.memory[0])+" kb used. Free: " + formatNumber(data.memory[2]) + " kb<br />" +
+			"<b>HDD usage:</b> " + formatNumber(data.storage["used"]) + " bytes out of " + formatNumber(data.storage["total"]) + " bytes used. Free: " + formatNumber(data.storage["free"]) + " bytes <br />" + 
+			"<b>Uptime:</b> "+ getTime(data.uptime) + "<br />" +
+			"<b>Processes running/idle:</b> " + data.CPUDetail[1] + "<br/>" +
+			"<b>Network stats</b>: <ul><li>Recieved: " + formatNumber(data.network[0]) + " bytes (" + formatNumber(data.network[1]) + " packets)</li><li>Sent: " + formatNumber(data.network[2]) + " bytes (" + formatNumber(data.network[3]) + " packets)</li></ul><b>CPU info:</b><br />");
 
-	for (var i = 0; i < data.CPU.length; i++) 
-	{
-		if(i % 3 === 0)
+		for (var i = 0; i < data.CPU.length; i++) 
 		{
-			var div = $("<div>", {"class": "info_box"});
-			$("#content").append(div);
-			div.append(data.CPU[i][1] + "<br />" + data.CPU[i + 1][0] + ": " + data.CPU[i + 1][1] + "<br />" + data.CPU[i + 2][0] + ": " + data.CPU[i + 2][1]);
+			if(i % 3 === 0)
+			{
+				var div = $("<div>", {"class": "info_box"});
+				$("#content").append(div);
+				div.append(data.CPU[i][1] + "<br />" + data.CPU[i + 1][0] + ": " + data.CPU[i + 1][1] + "<br />" + data.CPU[i + 2][0] + ": " + data.CPU[i + 2][1]);
+			}
 		}
-	}
+	});
 }
 
 function formatNumber(number)

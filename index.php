@@ -1,24 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="UTF-8">
 		<title>VPS Usage</title>
-		<style type="text/css">
-			article { display: inline-block; }
-			article h2 	{ font-size: 30px;	margin: 0;	}
-			article span { display: inline-block;  margin-top: 75px; font-size: 20px;}
-			#content { margin-top: 40px; }
-			div.info_box 
-			{ 
-				font-family: 'Didact Gothic', sans-serif;
-				color:#fff;
-				background-color: #66CC66;
-				border-radius:5px;
-				padding: 10px;
-				display: inline-block;
-				width: auto;
-    			margin: 10px;
-			}
-		</style>
 	</head>
 
 	<body>
