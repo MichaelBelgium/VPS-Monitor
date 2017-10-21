@@ -33,4 +33,4 @@ If you want you can have yours below too. Just do a pull request and i'll merge 
 * [Click](http://mg-s.us/vps/)
 * [Click](http://michaelbelgium.me/vps/)
 
-![Image](https://puu.sh/y2ZHo.png)
+![Image](https://puu.sh/y2ZL9.png)
