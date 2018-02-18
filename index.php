@@ -4,19 +4,6 @@
 		<meta charset="UTF-8">
 		<title>VPS Usage</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-		<style type="text/css">
-		div.info_box 
-		{ 
-			font-family: 'Didact Gothic', sans-serif;
-			color:#fff;
-			background-color: #66CC66;
-			border-radius:5px;
-			padding: 10px;
-			display: inline-block;
-			width: auto;
-			margin: 10px;
-		}
-		</style>
 	</head>
 
 	<body>
@@ -67,7 +54,7 @@
 				<div class="col-md-6">
 					<div class="card" id="cpu">
 						<div class="card-header">
-								CPU's
+							CPU's
 						</div>
 						<ul class="list-group list-group-flush"></ul>
 					</div>
