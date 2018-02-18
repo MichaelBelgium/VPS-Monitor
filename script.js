@@ -31,7 +31,7 @@ $(document).ready(function()
 		tooltip: { pointFormat: '{series.name}: <b>{point.y}%</b>' },
 		chart: { renderTo: 'mainchart' },
 		title: { text: 'Hardware usage' },
-		xAxis: { title: "Time", type: "datetime", },
+		xAxis: { title: "Time", type: "datetime" },
 
 		yAxis: {
 			title: 'Percentage',
@@ -75,21 +75,28 @@ function refresh()
 		mainchart.series[1].addPoint([time, parseFloat(currenthdd)], false, true);
 		mainchart.series[2].addPoint([time, parseFloat(currentcpu)], true, true);
 
-		$("#content").empty();
+		$("#ram .usage").text(formatNumber(data.memory[1]));
+		$("#ram .total").text(formatNumber(data.memory[0]));
+		$("#ram .free").text(formatNumber(data.memory[2]));
 
-		$("#content").html("<b>RAM usage:</b> "+formatNumber(data.memory[1])+" kb out of "+formatNumber(data.memory[0])+" kb used. Free: " + formatNumber(data.memory[2]) + " kb<br />" +
-			"<b>HDD usage:</b> " + formatNumber(data.storage["used"]) + " bytes out of " + formatNumber(data.storage["total"]) + " bytes used. Free: " + formatNumber(data.storage["free"]) + " bytes <br />" + 
-			"<b>Uptime:</b> "+ getTime(data.uptime) + "<br />" +
-			"<b>Processes running/idle:</b> " + data.CPUDetail[1] + "<br/>" +
-			"<b>Network stats</b>: <ul><li>Recieved: " + formatNumber(data.network[0]) + " bytes (" + formatNumber(data.network[1]) + " packets)</li><li>Sent: " + formatNumber(data.network[2]) + " bytes (" + formatNumber(data.network[3]) + " packets)</li></ul><b>CPU info:</b><br />");
+		$("#hdd .usage").text(formatNumber(data.storage["used"]));
+		$("#hdd .total").text(formatNumber(data.storage["total"]));
+		$("#hdd .free").text(formatNumber(data.storage["free"]));
+
+		$("#network .rec").html(formatNumber(data.network[0]) + " bytes <br/>Packets: " + formatNumber(data.network[1]));
+		$("#network .sent").html(formatNumber(data.network[2]) + " bytes <br/>Packets: " + formatNumber(data.network[3]));
+
+		$("#uptime").text("Uptime: " + getTime(data.uptime));
+
+		$("#cpu .list-group").empty();
 
 		for (var i = 0; i < data.CPU.length; i++) 
 		{
 			if(i % 3 === 0)
 			{
-				var div = $("<div>", {"class": "info_box"});
-				$("#content").append(div);
-				div.append(data.CPU[i][1] + "<br />" + data.CPU[i + 1][0] + ": " + data.CPU[i + 1][1] + "<br />" + data.CPU[i + 2][0] + ": " + data.CPU[i + 2][1]);
+				var listitem = $("<li>", {"class": "list-group-item"});
+				listitem.html(data.CPU[i][1] + "<br />" + data.CPU[i + 1][0] + ": " + data.CPU[i + 1][1] + "<br />" + data.CPU[i + 2][0] + ": " + data.CPU[i + 2][1]);
+				$("#cpu .list-group").append(listitem);
 			}
 		}
 	});
