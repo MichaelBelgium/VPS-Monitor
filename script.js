@@ -86,7 +86,8 @@ function refresh()
 		$("#network .rec").html(formatNumber(data.network[0]) + " bytes <br/>Packets: " + formatNumber(data.network[1]));
 		$("#network .sent").html(formatNumber(data.network[2]) + " bytes <br/>Packets: " + formatNumber(data.network[3]));
 
-		$("#uptime").text("Uptime: " + getTime(data.uptime));
+		var info = "Uptime: " + getTime(data.uptime) + "<br />Operating System: " + data.OS;
+		$("#general_info").html(info);
 
 		$("#cpu .list-group").empty();
 

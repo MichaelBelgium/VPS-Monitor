@@ -11,7 +11,7 @@
 			<div class="row">
 				<div class="col">
 					<div class="alert alert-warning" role="alert"><b>Note:</b> Content refreshes every <span id="refresh_time"></span> second(s).</div>
-					<div class="alert alert-info" role="alert" id="uptime">Uptime: -</div>
+					<div class="alert alert-info" role="alert" id="general_info">-</div>
 					<section id="mainchart"></section>
 				</div>
 			</div>
