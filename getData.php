@@ -2,7 +2,7 @@
 	$tmp = null;
 
 	$data = array(
-		"memory" => array_map('intval',explode(" ", exec("free | grep 'Mem:' | awk {'print $2\" \"$3\" \"$4'}"))),
+		"memory" => array_map('intval',explode(" ", exec("free | grep 'Mem:' | awk {'print $2\" \"$3\" \"$4\" \"$6'}"))),
 		"CPUDetail" => explode(" ", exec("cat /proc/loadavg | awk {'print $1\" \"$4'}")),
 		"CPU" => array(),
 		"storage" => array("total" => disk_total_space("/"), "free" => disk_free_space("/"), "used" => disk_total_space("/") - disk_free_space("/")),
