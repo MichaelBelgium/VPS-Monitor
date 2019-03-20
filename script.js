@@ -67,9 +67,10 @@ function refresh()
 	$.getJSON("getData.php", null, function(data, textStatus, jqXHR) {
 		var time = (new Date()).getTime();
 
+		var cpuload = (data.CPUDetail[0] * 100).toFixed(2);
 		var currentram = ((data.memory[1] / data.memory[0]) * 100).toFixed(2);
 		var currenthdd = ((data.storage["used"] / data.storage["total"]) * 100).toFixed(2);
-		var currentcpu = (data.CPUDetail[0] * 100).toFixed(2);
+		var currentcpu = cpuload > 100 ? 100 : cpuload;
 
 		mainchart.series[0].addPoint([time, parseFloat(currentram)], false, true);
 		mainchart.series[1].addPoint([time, parseFloat(currenthdd)], false, true);
