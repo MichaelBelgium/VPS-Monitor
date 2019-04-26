@@ -2,6 +2,8 @@ var mainchart;
 
 var refresh_time = 3;
 
+var prev_total = prev_idle = 0;
+
 $(document).ready(function() 
 {
 	$("#refresh_time").text(refresh_time);
@@ -67,7 +69,7 @@ function refresh()
 	$.getJSON("getData.php", null, function(data, textStatus, jqXHR) {
 		var time = (new Date()).getTime();
 
-		var cpuload = (data.CPUDetail[0] * 100).toFixed(2);
+		var cpuload = getCpuLoad(data.CPUDetail).toFixed(2);
 		var currentram = ((data.memory[1] / data.memory[0]) * 100).toFixed(2);
 		var currenthdd = ((data.storage["used"] / data.storage["total"]) * 100).toFixed(2);
 		var currentcpu = cpuload > 100 ? 100 : cpuload;
@@ -102,6 +104,27 @@ function refresh()
 			}
 		}
 	});
+}
+
+//Calculation by https://github.com/Leo-G/DevopsWiki/wiki/How-Linux-CPU-Usage-Time-and-Percentage-is-calculated
+function getCpuLoad(input)
+{
+	var cpuload = input.split(' ');
+	var sum = 0;
+
+	for (var i = 0; i < cpuload.length; i++) {
+		sum += parseInt(cpuload[i]);	
+	}
+
+	var idlecpuload = cpuload[3];
+	var diff_idle = idlecpuload - prev_idle;
+	var diff_total = sum - prev_total;
+	var diff_usage = (1000 * (diff_total - diff_idle) / diff_total + 5) / 10;
+
+	prev_total = sum;
+	prev_idle = idlecpuload;
+	
+	return diff_usage;
 }
 
 function formatNumber(number)
