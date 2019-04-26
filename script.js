@@ -11,10 +11,6 @@ $(document).ready(function()
 	mainchart = new Highcharts.stockChart({
 		rangeSelector: {
 			buttons: [{
-			count: 30,
-			type: 'second',
-			text: '30S'
-		},{
 			count: 1,
 			type: 'minute',
 			text: '1M'
@@ -22,6 +18,14 @@ $(document).ready(function()
 			count: 5,
 			type: 'minute',
 			text: '5M'
+		},{
+			count: 10,
+			type: 'minute',
+			text: '10M'
+		},{
+			count: 25,
+			type: 'minute',
+			text: '25M'
 		},{
 			type: 'all',
 			text: 'All'
