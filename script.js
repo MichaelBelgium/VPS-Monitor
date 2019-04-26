@@ -3,10 +3,23 @@ var mainchart;
 var refresh_time = 3;
 
 var prev_total = prev_idle = 0;
+var chart_ram, chart_hdd, chart_cpu;
 
 $(document).ready(function() 
 {
 	$("#refresh_time").text(refresh_time);
+	
+	highChartsInit();
+	
+	chart_ram = createChart("doughnut-ram", ["Free RAM", "Used ram"]);
+	chart_hdd = createChart("doughnut-hdd", ["Free space", "Used space"]);
+	chart_cpu = createChart("doughnut-cpu", ["Unused load", "Cpu load"]);
+
+    setInterval(refresh, refresh_time * 1000); 
+});
+
+function highChartsInit() 
+{
 	Highcharts.setOptions({ global: { useUTC: false } });
 	mainchart = new Highcharts.stockChart({
 		rangeSelector: {
@@ -52,20 +65,36 @@ $(document).ready(function()
 			{ name: 'CPU', data: getDummyData() }
 		]
     });
+}
 
-
-    setInterval(refresh, refresh_time * 1000); 
-
-});
+function createChart(forid, labelarray) {
+	return new Chart(document.getElementById(forid).getContext('2d'), {
+		type: 'doughnut',
+		data: {
+			labels: labelarray,
+			datasets: [{
+				data: [0, 0],
+				backgroundColor: ["#c3e6cb", "#f5c6cb" ],
+				hoverBackgroundColor: ["#155724", "#721c24"]
+			}]
+		},
+		options: {
+			responsive: true,
+			legend: {
+				display: false
+			}
+		}
+	});
+}
 
 function getDummyData()
 {
-	var chartdata = new Array(), curtime = new Date().getTime();;
+	var chartdata = new Array(), curtime = new Date().getTime();
 
 	for (i = -399; i <= 0; i++)	chartdata.push([curtime + i * 1000, 0]);
 		chartdata.push([curtime, 0]);
 
-		return chartdata;
+	return chartdata;
 }
 
 function refresh()
@@ -73,7 +102,7 @@ function refresh()
 	$.getJSON("getData.php", null, function(data, textStatus, jqXHR) {
 		var time = (new Date()).getTime();
 
-		var cpuload = getCpuLoad(data.CPUDetail).toFixed(2);
+		var cpuload = getCpuLoad(data.CPUDetail);
 		var currentram = ((data.memory[1] / data.memory[0]) * 100).toFixed(2);
 		var currenthdd = ((data.storage["used"] / data.storage["total"]) * 100).toFixed(2);
 		var currentcpu = cpuload > 100 ? 100 : cpuload;
@@ -97,6 +126,13 @@ function refresh()
 		$("#general_info").html(info);
 
 		$("#cpu .list-group").empty();
+
+		chart_ram.data.datasets[0].data = [data.memory[1], data.memory[2]];
+		chart_hdd.data.datasets[0].data = [data.storage["free"], data.storage["used"]];
+		chart_cpu.data.datasets[0].data = [100.0 - currentcpu, currentcpu];
+		chart_ram.update();
+		chart_hdd.update();
+		chart_cpu.update();
 
 		for (var i = 0; i < data.CPU.length; i++) 
 		{
@@ -128,7 +164,7 @@ function getCpuLoad(input)
 	prev_total = sum;
 	prev_idle = idlecpuload;
 	
-	return diff_usage;
+	return diff_usage.toFixed(2);
 }
 
 function formatNumber(number)
