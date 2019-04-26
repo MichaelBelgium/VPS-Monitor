@@ -32,4 +32,4 @@ If you want you can have yours below too. Just do a pull request and i'll merge 
 * [Click](http://exp-gaming.net/vps/)
 * [Click](http://michaelbelgium.me/vps/)
 
-![Image](https://puu.sh/zvpAR.png)
+![Image](http://puu.sh/DkjIP.png)
