@@ -36,9 +36,9 @@ function highChartsInit()
 			type: 'minute',
 			text: '10M'
 		},{
-			count: 25,
+			count: 15,
 			type: 'minute',
-			text: '25M'
+			text: '15M'
 		},{
 			type: 'all',
 			text: 'All'
@@ -99,7 +99,7 @@ function getDummyData()
 
 function refresh()
 {
-	$.getJSON("getData.php", null, function(data, textStatus, jqXHR) {
+	$.getJSON("getData.php", null, function(data) {
 		var time = (new Date()).getTime();
 
 		var cpuload = getCpuLoad(data.CPUDetail);
