@@ -127,7 +127,7 @@ function refresh()
 
 		$("#cpu .list-group").empty();
 
-		chart_ram.data.datasets[0].data = [data.memory[1], data.memory[2]];
+		chart_ram.data.datasets[0].data = [data.memory[2], data.memory[1]];
 		chart_hdd.data.datasets[0].data = [data.storage["free"], data.storage["used"]];
 		chart_cpu.data.datasets[0].data = [100.0 - currentcpu, currentcpu];
 		chart_ram.update();
