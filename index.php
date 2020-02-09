@@ -24,8 +24,8 @@
 						</div>
 						<ul class="list-group list-group-flush">
 							<li class="list-group-item list-group-item-danger">Usage: <span class="usage">0</span></li>
-							<li class="list-group-item list-group-item-info">Total: <span class="total">0</span> kb</li>
-							<li class="list-group-item list-group-item-success">Free: <span class="free">0</span> kb</li>
+							<li class="list-group-item list-group-item-info">Total: <span class="total">0</span> GB</li>
+							<li class="list-group-item list-group-item-success">Free: <span class="free">0</span> GB</li>
 						</ul>
 						<div class="card-body">
 							<canvas id="doughnut-ram"></canvas>

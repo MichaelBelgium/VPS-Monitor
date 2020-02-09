@@ -2,7 +2,12 @@
 	$tmp = null;
 
 	$data = array(
-		"memory" => array_map('intval',explode(" ", exec("free | grep 'Mem:' | awk {'print $2\" \"$3\" \"$4\" \"$6'}"))),
+		"memory" => array_map(
+			function($value) {
+				return (int)$value / 1000000;
+			},
+			explode(" ", exec("free | grep 'Mem:' | awk {'print $2\" \"$3\" \"$4\" \"$6'}"))
+		),
 		"CPUDetail" => trim(exec("sed -n 's/^cpu\s//p' /proc/stat")),
 		"CPU" => array(),
 		"storage" => array(

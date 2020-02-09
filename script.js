@@ -111,7 +111,7 @@ function refresh()
 		mainchart.series[1].addPoint([time, parseFloat(currenthdd)], false, true);
 		mainchart.series[2].addPoint([time, parseFloat(currentcpu)], true, true);
 
-		$("#ram .usage").html(formatNumber(data.memory[1]) + " kb<br/>Cache: " + formatNumber(data.memory[3]) + " kb");
+		$("#ram .usage").html(formatNumber(data.memory[1]) + " GB<br/>Cache: " + formatNumber(data.memory[3]) + " GB");
 		$("#ram .total").text(formatNumber(data.memory[0]));
 		$("#ram .free").text(formatNumber(data.memory[2]));
 
