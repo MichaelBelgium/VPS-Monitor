@@ -29,7 +29,7 @@ var refresh_time = 3; //every x seconds the page get refreshed
 
 If you want you can have yours below too. Just do a pull request and i'll merge it with pleasure.
 
-* [Click](http://exp-gaming.net/vps/)
-* [Click](http://michaelbelgium.me/vps/)
+* [Click](https://mg-s.us/vps/)
+* [Click](https://michaelbelgium.me/vps/)
 
 ![Image](http://puu.sh/DkjIP.png)
