@@ -1,19 +1,14 @@
-var mainchart;
+var mainchart, gauge;
 
 var refresh_time = 3;
 
 var prev_total = prev_idle = 0;
-var chart_ram, chart_hdd, chart_cpu;
 
 $(document).ready(function() 
 {
     $("#refresh_time").text(refresh_time);
     
     highChartsInit();
-    
-    chart_ram = createChart("doughnut-ram", ["Free RAM", "Used ram"]);
-    chart_hdd = createChart("doughnut-hdd", ["Free space", "Used space"]);
-    chart_cpu = createChart("doughnut-cpu", ["Unused load", "Cpu load"]);
 
     setInterval(refresh, refresh_time * 1000); 
 });
@@ -65,25 +60,105 @@ function highChartsInit()
             { name: 'CPU', data: getDummyData() }
         ]
     });
-}
 
-function createChart(forid, labelarray) {
-    return new Chart(document.getElementById(forid).getContext('2d'), {
-        type: 'doughnut',
-        data: {
-            labels: labelarray,
-            datasets: [{
-                data: [0, 0],
-                backgroundColor: ["#c3e6cb", "#f5c6cb" ],
-                hoverBackgroundColor: ["#155724", "#721c24"]
+    gauge = Highcharts.chart('gaugeUsage', {
+    
+        chart: {
+            type: 'solidgauge'
+        },
+    
+        title: {
+            text: 'Usage',
+            style: {
+                fontSize: '24px'
+            }
+        },
+    
+        tooltip: {
+            borderWidth: 0,
+            backgroundColor: 'none',
+            shadow: false,
+            style: {
+                fontSize: '16px'
+            },
+            valueSuffix: '%',
+            pointFormat: '{series.name}<br><span style="font-size:1.5em; color: {point.color}; font-weight: bold">{point.y}</span>',
+            positioner: function (labelWidth) {
+                return {
+                    x: (this.chart.chartWidth - labelWidth) / 2,
+                    y: (this.chart.plotHeight / 2) + 15
+                };
+            }
+        },
+    
+        pane: {
+            startAngle: 0,
+            endAngle: 360,
+            background: [{ //CPU
+                outerRadius: '112%',
+                innerRadius: '88%',
+                backgroundColor: Highcharts.color(Highcharts.getOptions().colors[0])
+                    .setOpacity(0.3)
+                    .get(),
+                borderWidth: 0
+            }, { //RAM
+                outerRadius: '87%',
+                innerRadius: '63%',
+                backgroundColor: Highcharts.color(Highcharts.getOptions().colors[1])
+                    .setOpacity(0.3)
+                    .get(),
+                borderWidth: 0
+            }, { //HDD
+                outerRadius: '62%',
+                innerRadius: '38%',
+                backgroundColor: Highcharts.color(Highcharts.getOptions().colors[2])
+                    .setOpacity(0.3)
+                    .get(),
+                borderWidth: 0
             }]
         },
-        options: {
-            responsive: true,
-            legend: {
-                display: false
+    
+        yAxis: {
+            min: 0,
+            max: 100,
+            lineWidth: 0,
+            tickPositions: []
+        },
+    
+        plotOptions: {
+            solidgauge: {
+                dataLabels: {
+                    enabled: false
+                },
+                rounded: true
             }
-        }
+        },
+    
+        series: [{
+            name: 'CPU',
+            data: [{
+                color: Highcharts.getOptions().colors[0],
+                radius: '112%',
+                innerRadius: '88%',
+                y: 0
+            }]
+        }, {
+            name: 'RAM',
+            data: [{
+                color: Highcharts.getOptions().colors[1],
+                radius: '87%',
+                innerRadius: '63%',
+                y: 0
+            }]
+        }, {
+            name: 'HDD',
+            data: [{
+                color: Highcharts.getOptions().colors[2],
+                radius: '62%',
+                innerRadius: '38%',
+                y: 0
+            }]
+        }]
     });
 }
 
@@ -92,7 +167,8 @@ function getDummyData()
     var chartdata = new Array(), curtime = new Date().getTime();
 
     for (i = -399; i <= 0; i++)	chartdata.push([curtime + i * 1000, 0]);
-        chartdata.push([curtime, 0]);
+    
+    chartdata.push([curtime, 0]);
 
     return chartdata;
 }
@@ -127,12 +203,9 @@ function refresh()
 
         $("#cpu .list-group").empty();
 
-        chart_ram.data.datasets[0].data = [data.memory[2], data.memory[1]];
-        chart_hdd.data.datasets[0].data = [data.storage["free"], data.storage["used"]];
-        chart_cpu.data.datasets[0].data = [100.0 - currentcpu, currentcpu];
-        chart_ram.update();
-        chart_hdd.update();
-        chart_cpu.update();
+        gauge.series[0].points[0].update(parseFloat(currentcpu));
+        gauge.series[1].points[0].update(parseFloat(currentram));
+        gauge.series[2].points[0].update(parseFloat(currenthdd));
 
         for (var i = 0; i < data.CPU.length; i++) 
         {
