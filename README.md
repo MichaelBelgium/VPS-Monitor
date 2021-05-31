@@ -1,24 +1,39 @@
-# VPS Resource Viewer (PHP)
+# VPS Resource Monitor
 
-If you ever have a website on your VPS or dedicated server, you could use this repo to view useful information about your system.
+A very simple, single monitoring page that fetches real-time info about your system. Does not save history.
 
 # What does it show ?
-* Graph and sections with: HDD, CPU and RAM usage
-* Uptime
-* Network usage: recieved/sent data and amount of packages
+* RAM usage
+    * Used
+    * Cached
+    * Total
+    * Free
+* HDD usage
+    * Used
+    * Total
+    * Free
+* CPU specs
+    * usage
+    * cores
+    * speed
+    * threads
+* System uptime
+* Network usage
+    * amount and size of recieved packets
+    * amount and size of sent packets 
 * Operating system
 
 # Dependencies
-These dependencies are requireds but already included in the index file.
+These dependencies are required but already included.
 
 * jQuery
 * Highcharts
 
 # Compatibility
-This php page has been tested on `CentOS Linux release 7.4.1708 (Core)` and `CentOS release 6.9 (Final)`
+This php page has been tested on `CentOS 7` and `Debian 9`
 There's a chance you might need to edit the `getData.php` for your system.
 
-# Config
+# Configuration
 This is located in the `script.js`
 
 ```javascript
@@ -32,4 +47,4 @@ If you want you can have yours below too. Just do a pull request and i'll merge 
 * [Click](https://mg-s.us/vps/)
 * [Click](https://michaelbelgium.me/vps/)
 
-![Image](http://puu.sh/DkjIP.png)
+![Image](https://i.imgur.com/xD4meAo.png)
